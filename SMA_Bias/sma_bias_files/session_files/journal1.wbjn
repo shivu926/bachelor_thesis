@@ -1,0 +1,77 @@
+# encoding: utf-8
+# 2021 R1
+SetScriptVersion(Version="21.1.216")
+template1 = GetTemplate(
+    TemplateName="Static Structural",
+    Solver="ANSYS")
+system1 = template1.CreateSystem()
+engineeringData1 = system1.GetContainer(ComponentName="Engineering Data")
+matl1 = engineeringData1.CreateMaterial(Name="nitinol")
+matlProp1 = matl1.CreateProperty(
+    Name="Density",
+    Qualifiers={"Definition": "", "Behavior": ""})
+matlProp2 = matl1.CreateProperty(
+    Name="Elasticity",
+    Behavior="Isotropic",
+    Qualifiers={"Definition": "", "Behavior": "Isotropic"})
+matlProp3 = matl1.CreateProperty(
+    Name="Shape Memory Effect",
+    Qualifiers={"Definition": "", "Behavior": ""})
+unitSystem1 = SetProjectUnitSystem(UnitSystemName="MKS_STANDARD")
+unitSystem2 = SetProjectUnitSystem(UnitSystemName="NMMTON_STANDARD")
+matlProp1.SetData(
+    Index=-1,
+    Variables=["Density"],
+    Values=[["4650 [kg m^-3]"]])
+matlProp2.SetData(
+    Index=-1,
+    Variables=["Young's Modulus"],
+    Values=[["51700000000 [Pa]"]])
+matlProp2.SetData(
+    Variables=["Poisson's Ratio"],
+    Values=[["0.3"]])
+matlProp3.SetData(
+    Index=-1,
+    Variables=["Hardening Parameter"],
+    Values=[["1000000000 [Pa]"]])
+matlProp3.SetData(
+    Variables=["Reference Temperature"],
+    Values=[["22 [C]"]])
+matlProp3.SetData(
+    Variables=["Elastic Limit"],
+    Values=[["14000000000 [Pa]"]])
+matlProp3.SetData(
+    Variables=["Temperature Scaling Parameter"],
+    Values=[["56000000000 [Pa C^-1]"]])
+matlProp3.SetData(
+    Variables=["Maximum Transformation Strain"],
+    Values=[["0.07 [m m^-1]"]])
+matlProp3.SetData(
+    Variables=["Martensite Modulus"],
+    Values=[["51700000000 [Pa]"]])
+matlProp3.SetData(
+    Variables=["Lode Dependency Parameter"],
+    Values=[["0"]])
+geometry1 = system1.GetContainer(ComponentName="Geometry")
+geometry1.Edit()
+geometry1.Exit()
+geometryComponent1 = system1.GetComponent(Name="Geometry")
+geometryComponent1.Reset()
+geometry1.Edit()
+geometryComponent1.Reset()
+geometry1.Edit(IsSpaceClaimGeometry=True)
+geometry1.Exit()
+geometryComponent1.Reset()
+geometry1.Edit()
+geometry1.Exit()
+Save(Overwrite=True)
+modelComponent1 = system1.GetComponent(Name="Model")
+modelComponent1.Refresh()
+model1 = system1.GetContainer(ComponentName="Model")
+model1.Edit()
+geometry1.Edit()
+geometry1.Exit()
+modelComponent1.Refresh()
+model1.Edit()
+model1.Exit()
+Save(Overwrite=True)

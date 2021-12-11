@@ -1,0 +1,63 @@
+# encoding: utf-8
+# 2021 R1
+SetScriptVersion(Version="21.1.216")
+system1 = GetSystem(Name="SYS 1")
+engineeringData1 = system1.GetContainer(ComponentName="Engineering Data")
+material1 = engineeringData1.GetMaterial(Name="Thermal Bending Wire Top")
+matlProp1 = material1.CreateProperty(
+    Name="Density",
+    Qualifiers={"Definition": "", "Behavior": ""})
+matlProp1.SetData(
+    Index=-1,
+    Variables=["Density"],
+    Values=[["6450 [kg m^-3]"]])
+matlProp2 = material1.GetProperty(Name="Elasticity")
+matlProp2.SetData(
+    Variables=["Young's Modulus"],
+    Values=[["67000000000 [Pa]"]])
+matlProp2.SetData(
+    Variables=["Poisson's Ratio"],
+    Values=[["0.33"]])
+Save(Overwrite=True)
+Archive(
+    FilePath=GetAbsoluteUserPathName("Desktop/SMA-Capstone/ansys1/SAM1_SME.wbpz"),
+    IncludeExternalImportedFiles=True)
+material1.DisplayName = "Nitinol"
+material2 = engineeringData1.GetMaterial(Name="Thermal Bending Wire Bottom")
+material2.DisplayName = "Thermal Bending Wire top"
+matlProp3 = material1.CreateProperty(
+    Name="Superelasticity",
+    Qualifiers={"Definition": "", "Behavior": ""})
+matlProp3.SetData(
+    Index=-1,
+    Variables=["Alpha"],
+    Values=[["0"]])
+matlProp3.SetData(
+    Variables=["Epsilon"],
+    Values=[["0.067 [m m^-1]"]])
+matlProp3.SetData(
+    Variables=["Sigma FSA"],
+    Values=[["170000000 [Pa]"]])
+matlProp3.SetData(
+    Variables=["Sigma SSA"],
+    Values=[["239 [Pa]"]])
+matlProp3.SetData(
+    Variables=["Sigma SSA"],
+    Values=[["239000000 [Pa]"]])
+matlProp3.SetData(
+    Variables=["Sigma FAS"],
+    Values=[["170000000 [Pa]"]])
+matlProp3.SetData(
+    Variables=["Sigma SAS"],
+    Values=[["100000000 [Pa]"]])
+modelComponent1 = system1.GetComponent(Name="Model")
+modelComponent1.Refresh()
+model1 = system1.GetContainer(ComponentName="Model")
+model1.Edit()
+Save(Overwrite=True)
+Archive(
+    FilePath=GetAbsoluteUserPathName("Desktop/SMA-Capstone/ansys1/SAM1_SME.wbpz"),
+    IncludeExternalImportedFiles=True)
+Save(Overwrite=True)
+Save(Overwrite=True)
+Save(Overwrite=True)

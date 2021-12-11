@@ -1,0 +1,112 @@
+﻿# encoding: utf-8
+# Release 18.2
+SetScriptVersion(Version="18.2.109")
+template1 = GetTemplate(TemplateName="EngData")
+system1 = template1.CreateSystem()
+engineeringData1 = system1.GetContainer(ComponentName="Engineering Data")
+matl1 = engineeringData1.CreateMaterial(Name="Bimetalic Wire")
+matlProp1 = matl1.CreateProperty(
+    Name="Coefficient of Thermal Expansion",
+    Definition="Instantaneous",
+    Behavior="Orthotropic",
+    Qualifiers={"Definition": "Instantaneous", "Behavior": "Orthotropic"})
+matlProp2 = matl1.CreateProperty(
+    Name="Elasticity",
+    Behavior="Orthotropic",
+    Qualifiers={"Definition": "", "Behavior": "Orthotropic"})
+matlProp2.Delete(Behavior="Orthotropic")
+matlProp3 = matl1.CreateProperty(
+    Name="Elasticity",
+    Behavior="Isotropic",
+    Qualifiers={"Definition": "", "Behavior": "Isotropic"})
+matl1.DisplayName = "Thermal Bending Wire"
+matlProp1.SetData(
+    Index=-1,
+    Variables=["Coefficient of Thermal Expansion X direction"],
+    Values=[["1 [C^-1]"]])
+matlProp1.SetData(
+    Variables=["Coefficient of Thermal Expansion Y direction"],
+    Values=[["0 [C^-1]"]])
+matlProp1.SetData(
+    Variables=["Coefficient of Thermal Expansion Z direction"],
+    Values=[["0 [C^-1]"]])
+matlProp3.SetData(
+    Index=-1,
+    Variables=["Young's Modulus"],
+    Values=[["200000000000 [Pa]"]])
+matlProp3.SetData(
+    Variables=["Poisson's Ratio"],
+    Values=[["0.3"]])
+matl1.DisplayName = "Thermal Bending Wire Top"
+matl2 = matl1.Duplicate(TargetContainer=engineeringData1)
+matl2.DisplayName = "Thermal Bending Wire Bottom"
+material1 = engineeringData1.GetMaterial(Name="Titanium Alloy")
+material1.Delete()
+matlProp4 = matl2.GetProperty(Name="Coefficient of Thermal Expansion")
+matlProp4.SetData(
+    Variables=["Coefficient of Thermal Expansion X direction"],
+    Values=[["-1 [C^-1]"]])
+template2 = GetTemplate(
+    TemplateName="Static Structural",
+    Solver="ANSYS")
+engineeringDataComponent1 = system1.GetComponent(Name="Engineering Data")
+system2 = template2.CreateSystem(
+    ComponentsToShare=[engineeringDataComponent1],
+    Position="Right",
+    RelativeTo=system1)
+geometry1 = system2.GetContainer(ComponentName="Geometry")
+geometry1.Edit(IsSpaceClaimGeometry=True)
+Refresh()
+model1 = system2.GetContainer(ComponentName="Model")
+model1.Edit()
+matlProp4.SetData(
+    Variables=["Coefficient of Thermal Expansion X direction"],
+    Values=[["-0.001 [C^-1]"]])
+matlProp1.SetData(
+    Variables=["Coefficient of Thermal Expansion X direction"],
+    Values=[["0.001 [C^-1]"]])
+geometry1.Exit()
+Refresh()
+matlProp1.SetData(
+    Variables=["Coefficient of Thermal Expansion X direction"],
+    Values=[["1E-05 [C^-1]"]])
+matlProp4.SetData(
+    Variables=["Coefficient of Thermal Expansion X direction"],
+    Values=[["-1E-05 [C^-1]"]])
+Refresh()
+matlProp4.SetData(
+    Variables=["Coefficient of Thermal Expansion X direction"],
+    Values=[["-0.0001 [C^-1]"]])
+matlProp4.SetData(
+    Variables=["Coefficient of Thermal Expansion X direction"],
+    Values=[["0.0001 [C^-1]"]])
+matlProp1.SetData(
+    Variables=["Coefficient of Thermal Expansion X direction"],
+    Values=[["-0.0001 [C^-1]"]])
+Refresh()
+model1.Exit()
+material2 = engineeringData1.GetMaterial(Name="Aluminum Alloy")
+material2.Delete()
+material3 = engineeringData1.GetMaterial(Name="Gray Cast Iron")
+material3.Delete()
+material4 = engineeringData1.GetMaterial(Name="Magnesium Alloy")
+material4.Delete()
+material5 = engineeringData1.GetMaterial(Name="Polyethylene")
+material5.Delete()
+material6 = engineeringData1.GetMaterial(Name="Structural Steel")
+material6.Delete()
+Refresh()
+Save(Overwrite=True)
+system3 = system2.Duplicate(RelativeTo=system2)
+system3.DisplayText = "Static Structural"
+Update()
+system2.Delete()
+system1.Delete()
+Save(Overwrite=True)
+Archive(
+    FilePath=GetAbsoluteUserPathName("studentcommunity/Bi/Bimetalic Strip.wbpz"),
+    IncludeExternalImportedFiles=True)
+model2 = system3.GetContainer(ComponentName="Model")
+model2.Edit()
+model2.Exit()
+Save(Overwrite=True)

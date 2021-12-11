@@ -1,0 +1,48 @@
+# encoding: utf-8
+# 2021 R1
+SetScriptVersion(Version="21.1.216")
+system1 = GetSystem(Name="SYS")
+model1 = system1.GetContainer(ComponentName="Model")
+model1.Edit()
+engineeringData1 = system1.GetContainer(ComponentName="Engineering Data")
+matl1 = engineeringData1.CreateMaterial(Name="bender")
+matlProp1 = matl1.CreateProperty(
+    Name="Elasticity",
+    Behavior="Isotropic",
+    Qualifiers={"Definition": "", "Behavior": "Isotropic"})
+matlProp2 = matl1.CreateProperty(
+    Name="Coefficient of Thermal Expansion",
+    Definition="Instantaneous",
+    Behavior="Orthotropic",
+    Qualifiers={"Definition": "Instantaneous", "Behavior": "Orthotropic"})
+matlProp2.SetData(
+    Index=-1,
+    Variables=["Coefficient of Thermal Expansion X direction"],
+    Values=[["0.0001 [C^-1]"]])
+matlProp2.SetData(
+    Variables=["Coefficient of Thermal Expansion Y direction"],
+    Values=[["0 [C^-1]"]])
+matlProp2.SetData(
+    Variables=["Coefficient of Thermal Expansion Z direction"],
+    Values=[["0 [C^-1]"]])
+unitSystem1 = SetProjectUnitSystem(UnitSystemName="MKS_STANDARD")
+matlProp1.SetVariableProperty(
+    VariableName="Young's Modulus",
+    Property="Unit",
+    Value="Pa")
+matlProp1.SetData(
+    Index=-1,
+    Variables=["Young's Modulus"],
+    Values=[["200000000000 [Pa]"]])
+matlProp1.SetData(
+    Variables=["Poisson's Ratio"],
+    Values=[["0"]])
+favorites1 = EngData.LoadFavoriteItems()
+modelComponent1 = system1.GetComponent(Name="Model")
+modelComponent1.Refresh()
+model1.Edit()
+Save(Overwrite=True)
+model1.Exit()
+model1.Edit()
+model1.Exit()
+Save(Overwrite=True)
